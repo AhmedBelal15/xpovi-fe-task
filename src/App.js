@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
+import { Alert } from "reactstrap";
 import "./App.css";
 
 function App() {
@@ -14,60 +15,74 @@ function App() {
     question2: "",
   });
   const [shouldRender, setShouldRender] = useState("section1");
+  const [renderAlert, setRenderAlert] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("https://mockendpoint.com/postroute", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: "Bearer accesstoken",
+        },
+        body: JSON.stringify({
+          section1: {
+            ...setSsection1Answers,
+          },
+          section2: {
+            ...section2Answers,
+          },
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      //do something with the data
+    } catch (error) {
+      console.log(error);
+    }
+    setSsection1Answers({
+      question1: "",
+      question2: "",
+      question3: "",
+    });
+    setSsection2Answers({
+      question1: "",
+      question2: "",
+    });
+
+    //This should be in try block but we aren't submitting to a real endpoint so it'll never fire xD
+    setRenderAlert(true);
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        alert("Your answers are submitted successfully");
-      }}
-    >
-      {shouldRender === "section1" ? (
-        <div>
+    <>
+      <h1>XPovi Front End Task</h1>
+      <form onSubmit={handleSubmit}>
+        {shouldRender === "section1" ? (
           <Section1
             selectedAnswers={section1Answers}
             setSelectedAnswers={setSsection1Answers}
+            setShouldRender={setShouldRender}
           />
-          <button
-            disabled={
-              section1Answers.question1 === "" ||
-              (section1Answers.question2 === "" &&
-                section1Answers.question3 === "") ||
-              (section1Answers.question1 === "Both" &&
-                (section1Answers.question2 === "" ||
-                  section1Answers.question3 === ""))
-            }
-            onClick={() => {
-              setShouldRender("section2");
-            }}
-            className="btn btn-primary"
-          >
-            Next
-          </button>
-        </div>
-      ) : null}
+        ) : null}
 
-      {shouldRender === "section2" ? (
-        <div>
-          <Section2
-            selectedAnswers={section2Answers}
-            setSelectedAnswers={setSsection2Answers}
-          />
+        {shouldRender === "section2" ? (
           <div>
-            <button
-              onClick={() => {
-                setShouldRender("section1");
-              }}
-              className="btn btn-secondary"
-            >
-              Back
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
+            <Section2
+              selectedAnswers={section2Answers}
+              setSelectedAnswers={setSsection2Answers}
+              setShouldRender={setShouldRender}
+            />
           </div>
-        </div>
-      ) : null}
-    </form>
+        ) : null}
+        {renderAlert ? (
+          <Alert color="success">
+            Your answers are submitted successfully!
+          </Alert>
+        ) : null}
+      </form>
+    </>
   );
 }
 

@@ -3,7 +3,7 @@ import { section2Data } from "../data/data";
 import DropdownComponent from "./Dropdown";
 import { FormGroup, Label, Input } from "reactstrap";
 
-const Section2 = ({ selectedAnswers, setSelectedAnswers }) => {
+const Section2 = ({ selectedAnswers, setSelectedAnswers, setShouldRender }) => {
   const [data, setData] = useState({
     question1: {
       question: "",
@@ -40,36 +40,53 @@ const Section2 = ({ selectedAnswers, setSelectedAnswers }) => {
   }, [selectedAnswers, setSelectedAnswers]);
 
   return (
-    <div>
-      <DropdownComponent
-        header={data.question1.question}
-        choices={data.question1.choices}
-        question="question1"
-        selectedAnswers={selectedAnswers.question1}
-        selectAnswer={selectAnswer}
-      />
-
-      <FormGroup>
-        <Label htmlFor="investment">{data.question2.question}</Label>
-        <Input
-        required={selectedAnswers.question1 === "Yes"}
-          value={selectedAnswers.question2}
-          disabled={
-            selectedAnswers.question1 === "No" ||
-            selectedAnswers.question1 === ""
-          }
-          onChange={(e) => {
-            const regex = /^\d+$/;
-            if (regex.test(e.target.value) || e.target.value === "") {
-              setSelectedAnswers((prevState) => {
-                return { ...prevState, question2: e.target.value };
-              });
-            }
-          }}
-          id="investment"
-          placeholder="Enter a number"
+    <div className="section-css">
+      <div>
+        <DropdownComponent
+          header={data.question1.question}
+          choices={data.question1.choices}
+          question="question1"
+          selectedAnswers={selectedAnswers.question1}
+          selectAnswer={selectAnswer}
         />
-      </FormGroup>
+      </div>
+
+      <div>
+        <FormGroup>
+          <Label htmlFor="investment">{data.question2.question}</Label>
+          <Input
+            required={selectedAnswers.question1 === "Yes"}
+            value={selectedAnswers.question2}
+            disabled={
+              selectedAnswers.question1 === "No" ||
+              selectedAnswers.question1 === ""
+            }
+            onChange={(e) => {
+              const regex = /^\d+$/;
+              if (regex.test(e.target.value) || e.target.value === "") {
+                setSelectedAnswers((prevState) => {
+                  return { ...prevState, question2: e.target.value };
+                });
+              }
+            }}
+            id="investment"
+            placeholder="Enter a number"
+          />
+        </FormGroup>
+        <div className="buttons-container">
+            <button
+              onClick={() => {
+                setShouldRender("section1");
+              }}
+              className="btn btn-secondary"
+            >
+              Back
+            </button>
+            <button disabled={selectedAnswers.question1 === ''} type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+      </div>
     </div>
   );
 };
