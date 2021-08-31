@@ -12,3 +12,13 @@ export const section1Data = {
     choices: ["Yes", "No"],
   },
 };
+
+export const section2Data = {
+  question1: {
+    question: "Did you have an investment?",
+    choices: ["Yes", "No"],
+  },
+  question2: {
+    question: "how much was the investment?",
+  },
+};

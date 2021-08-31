@@ -18,7 +18,6 @@ const Section1 = ({ selectedAnswers, setSelectedAnswers }) => {
     },
   });
 
-  console.log(selectedAnswers);
   const selectAnswer = (e, choice) => {
     setSelectedAnswers((prevState) => {
       return { ...prevState, [e.target.name]: choice };
